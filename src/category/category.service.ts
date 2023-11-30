@@ -4,16 +4,35 @@ import { Category } from './category.entity'
 import { Repository } from 'typeorm'
 
 @Injectable()
-export class CategoryService{
+export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>
   ) {}
+
   async findAll(): Promise<Category[]> {
     return this.categoryRepository.find()
   }
 
-  async create(input: Category): Promise<Category>{
+  async findById(id: string): Promise<Category> {
+    return this.categoryRepository.findOneBy({id: id})
+  }
+
+  async create(input: Category): Promise<Category> {
     return this.categoryRepository.save(input)
+  }
+
+  async update(input: Category): Promise<Category> {
+    await this.categoryRepository.update(input.id, input)
+    return input
+  }
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      await this.categoryRepository.delete(id)
+      return true
+    } catch (err) {
+      return false
+    }
   }
 }
