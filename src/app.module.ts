@@ -14,22 +14,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async(configService: ConfigService) => ({
-        type: 'postgres',
+        type: configService.get('TYPE_DB'),
         url: configService.get('DATABASE_URL'),
         autoLoadEntities: true,
         syncronize: true,
         logging: true
       })
     }),
-      /*
-      type: 'postgres',
-      url: 'postgres://postgres:postgres@localhost:5432/devshop',
-      autoLoadEntities: true,
-      synchronize: true, //não habilitar em produção, somente desenvolvimento
-      //entities: [Category],
-      logging: true
-    }),
-    */
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql'
