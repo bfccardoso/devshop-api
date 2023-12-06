@@ -6,6 +6,7 @@ import { CategoryModule } from './category/category.module'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ProductModule } from './product/product.module'
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql'
     }),
-    CategoryModule
+    CategoryModule,
+    ProductModule
   ],
   controllers: [AppController],
   providers: [AppService]
