@@ -15,11 +15,22 @@ export class ProductService {
   }
 
   async findAll(): Promise<Product[]> {
-    return this.productRepository.find()
+    return this.productRepository.find({
+      relations: {
+        category: true
+      }
+    })
   }
 
   async findById(id: string): Promise<Product> {
-    return this.productRepository.findOneBy({id: id})
+    return await this.productRepository.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+        category: true
+      }
+    })
   }
 
   async update(input: Product): Promise<Product> {

@@ -11,26 +11,33 @@ export class ProductResolver {
 
   @Query(() => [ProductPublic], { name: 'getAllProducts' })
   async getAllProducts(): Promise<ProductPublic[]> {
-    return await this.productService.findAll()
+    const products = await this.productService.findAll()
+    return products.map(ProductMapper.fromEntityToPublic) 
   }
 
   @Mutation(() => ProductPublic, { name: 'createProduct' })
   async createProduct(
     @Args('input') input: ProductCreateInput
   ): Promise<ProductPublic> {
-    return this.productService.create(ProductMapper.toEntity(input))
+    return ProductMapper.fromEntityToPublic(
+      await this.productService.create(ProductMapper.toEntity(input))
+    )
   }
 
   @Query(() => ProductPublic, { name: 'getProductById' })
   async getProductById(@Args('id') id: string): Promise<ProductPublic> {
-    return await this.productService.findById(id)
+    return ProductMapper.fromEntityToPublic(
+      await this.productService.findById(id)
+    )
   }
 
   @Mutation(() => ProductPublic, { name: 'updateProduct' })
   async updateProduct(
     @Args('input') input: ProductUpdateInput
   ): Promise<ProductPublic> {
-    return this.productService.update(ProductMapper.fromUpdateToEntity(input))
+    return ProductMapper.fromEntityToPublic(
+      await this.productService.update(ProductMapper.fromUpdateToEntity(input))
+    )
   }
 
   @Mutation(() => Boolean, { name: 'deleteProduct' })

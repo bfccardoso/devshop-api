@@ -17,10 +17,6 @@ export class Product {
 
   //relation / association
   //Product N -> 1 Category
-  @ManyToOne(
-    //() == type
-    () => Category,
-    category => category.id
-  )
+  @ManyToOne(() => Category, category => category.id)
   category: Category
 }

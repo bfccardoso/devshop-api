@@ -13,4 +13,7 @@ export class ProductPublic {
 
   @Field({ nullable: true })
   description: string
+
+  @Field({ nullable: true })
+  category: string
 }
