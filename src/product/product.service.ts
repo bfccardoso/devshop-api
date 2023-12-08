@@ -33,6 +33,10 @@ export class ProductService {
     })
   }
 
+  async findBySlug(slug: string): Promise<Product> {
+    return this.productRepository.findOne({ where: [{ slug }] })
+  }
+
   async update(input: Product): Promise<Product> {
     await this.productRepository.update(input.id, {
       name: input.name,

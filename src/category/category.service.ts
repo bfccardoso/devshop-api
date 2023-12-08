@@ -15,7 +15,11 @@ export class CategoryService {
   }
 
   async findById(id: string): Promise<Category> {
-    return this.categoryRepository.findOneBy({id: id})
+    return this.categoryRepository.findOneBy({ id: id })
+  }
+
+  async findBySlug(slug: string): Promise<Category> {
+    return this.categoryRepository.findOne({ where: [{ slug }] })
   }
 
   async create(input: Category): Promise<Category> {
