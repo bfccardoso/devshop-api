@@ -31,6 +31,13 @@ export class ProductResolver {
     )
   }
 
+  @Query(() => ProductPublic, { name: 'getProductBySlug' })
+  async getProductBySlug(@Args('slug') slug: string): Promise<ProductPublic> {
+    return ProductMapper.fromEntityToPublic(
+      await this.productService.findBySlug(slug)
+    )
+  }
+
   @Mutation(() => ProductPublic, { name: 'updateProduct' })
   async updateProduct(
     @Args('input') input: ProductUpdateInput

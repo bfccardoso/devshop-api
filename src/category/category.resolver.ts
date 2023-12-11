@@ -18,6 +18,11 @@ export class CategoryResolver {
     return await this.categoryService.findById(id)
   }
 
+  @Query(() => CategoryPublic, { name: 'getCategoryBySlug' })
+  async getCategoryBySlug(@Args('slug') slug: string): Promise<CategoryPublic> {
+    return await this.categoryService.findBySlug(slug)
+  }
+
   @Mutation(() => CategoryPublic, { name: 'createCategory' })
   async createCategory(
     @Args('input') input: CategoryCreateInput
