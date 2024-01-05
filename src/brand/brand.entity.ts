@@ -10,4 +10,7 @@ export class Brand {
 
   @Column({ length: 250, nullable: false })
   slug: string
+
+  @Column({ length: 450, nullable: true })
+  logo: string
 }

@@ -10,4 +10,7 @@ export class BrandPublic {
 
   @Field({ nullable: true })
   slug: string
+
+  @Field({ nullable: true })
+  logo: string
 }
