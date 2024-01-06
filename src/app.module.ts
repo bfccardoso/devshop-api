@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ProductModule } from './product/product.module'
 import { BrandModule } from './brand/brand.module'
+import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { BrandModule } from './brand/brand.module'
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async(configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         type: configService.get('TYPE_DB'),
         url: configService.get('DATABASE_URL'),
         autoLoadEntities: true,
@@ -29,7 +30,8 @@ import { BrandModule } from './brand/brand.module'
     }),
     CategoryModule,
     ProductModule,
-    BrandModule
+    BrandModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService]
