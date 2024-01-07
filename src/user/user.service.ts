@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './user.entity'
 import { Repository } from 'typeorm'
+import { AuthToken } from './authtoken.entity'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    @InjectRepository(AuthToken)
+    private authTokenRepository: Repository<AuthToken>
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -26,12 +29,30 @@ export class UserService {
     return this.userRepository.save(input)
   }
 
+  async auth(email: string, passwd: string): Promise<[User, AuthToken]> {
+    const user = await this.userRepository.findOne({ where: [{ email }] })
+    if (user && (await user.checkPassword(passwd))) {
+      const authToken = new AuthToken()
+      authToken.user = user
+      const token = await this.authTokenRepository.save(authToken)
+      return [user, token]
+    }
+    return null
+  }
+
+  async getRefreshToken(id: string): Promise<AuthToken> {
+    return await this.authTokenRepository.findOne({
+      where: [{ id }],
+      relations: ['user']
+    })
+  }
+
   async update(input: User): Promise<User> {
-    const entity = await this.userRepository.findOneBy({id: input.id})
-    entity.name = input.name,
-    entity.email = input.email,
-    entity.passwd = input.passwd,
-    entity.role = input.role
+    const entity = await this.userRepository.findOneBy({ id: input.id })
+    ;(entity.name = input.name),
+      (entity.email = input.email),
+      (entity.passwd = input.passwd),
+      (entity.role = input.role)
     await this.userRepository.save(entity)
     return input
   }

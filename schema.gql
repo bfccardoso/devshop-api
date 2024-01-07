@@ -30,6 +30,11 @@ type User {
   role: String
 }
 
+type AuthToken {
+  refreshToken: String
+  accessToken: String!
+}
+
 type Query {
   getAllCategories: [Category!]!
   getCategoryById(id: String!): Category!
@@ -43,6 +48,7 @@ type Query {
   getAllUsers: [User!]!
   getUserById(id: String!): User!
   getUserByEmail(email: String!): User!
+  getMe: User!
 }
 
 type Mutation {
@@ -60,6 +66,8 @@ type Mutation {
   createUser(input: UserCreateInput!): User!
   updateUser(input: UserUpdateInput!): User!
   deleteUser(id: String!): Boolean!
+  auth(input: AuthUserInput!): AuthToken!
+  accessToken(refreshToken: String!): String!
 }
 
 input CategoryCreateInput {
@@ -115,4 +123,9 @@ input UserUpdateInput {
   passwd: String!
   email: String!
   role: String!
+}
+
+input AuthUserInput {
+  email: String!
+  passwd: String!
 }

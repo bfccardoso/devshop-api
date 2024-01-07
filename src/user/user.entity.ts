@@ -3,9 +3,11 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import * as bcrypt from 'bcrypt'
+import { AuthToken } from './authtoken.entity'
 
 @Entity()
 export class User {
@@ -33,6 +35,10 @@ export class User {
   @Column({ type: 'timestamp' })
   updateAt: Date
 
+  @OneToMany(() => AuthToken, authToken => authToken.user)
+  authTokens: AuthToken[]
+  static id: any
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
@@ -50,5 +56,9 @@ export class User {
   @BeforeUpdate()
   setUpdateDate(): void {
     this.updateAt = new Date()
+  }
+
+  async checkPassword(passwd: string): Promise<boolean> {
+    return bcrypt.compare(passwd, this.passwd)
   }
 }
