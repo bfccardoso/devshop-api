@@ -37,7 +37,7 @@ export class UserService {
       const token = await this.authTokenRepository.save(authToken)
       return [user, token]
     }
-    return null
+    return [null, null]
   }
 
   async getRefreshToken(id: string): Promise<AuthToken> {
