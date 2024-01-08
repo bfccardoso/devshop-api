@@ -17,32 +17,39 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly jwtService: JwtService
   ) {}
-  @Query(() => [UserPublic], { name: 'getAllUsers' })
+
+  @UseGuards(AuthGuard)
+  @Query(() => [UserPublic], { name: 'panelGetAllUsers' })
   async getAllUsers(): Promise<UserPublic[]> {
     return await this.userService.findAll()
   }
 
-  @Query(() => UserPublic, { name: 'getUserById' })
+  @UseGuards(AuthGuard)
+  @Query(() => UserPublic, { name: 'panelGetUserById' })
   async getUserById(@Args('id') id: string): Promise<UserPublic> {
     return await this.userService.findById(id)
   }
 
-  @Query(() => UserPublic, { name: 'getUserByEmail' })
+  @UseGuards(AuthGuard)
+  @Query(() => UserPublic, { name: 'panelGetUserByEmail' })
   async getUserByEmail(@Args('email') email: string): Promise<UserPublic> {
     return await this.userService.findByEmail(email)
   }
 
-  @Mutation(() => UserPublic, { name: 'createUser' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => UserPublic, { name: 'panelCreateUser' })
   async createUser(@Args('input') input: UserCreateInput): Promise<UserPublic> {
     return this.userService.create(UserMapper.toEntity(input))
   }
 
-  @Mutation(() => UserPublic, { name: 'updateUser' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => UserPublic, { name: 'panelUpdateUser' })
   async updateUser(@Args('input') input: UserUpdateInput): Promise<UserPublic> {
     return this.userService.update(UserMapper.toUpdateEntity(input))
   }
 
-  @Mutation(() => Boolean, { name: 'deleteUser' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelDeleteUser' })
   async deleteUser(@Args('id') input: string): Promise<boolean> {
     return this.userService.delete(input)
   }
@@ -100,7 +107,7 @@ export class UserResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => UserPublic, { name: 'getMe' })
+  @Query(() => UserPublic, { name: 'panelGetMe' })
   async getMe(@AuthUserId() id: string): Promise<UserPublic> {
     return await this.userService.findById(id)
   }

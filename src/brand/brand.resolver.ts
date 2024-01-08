@@ -6,10 +6,13 @@ import { BrandMapper } from './brand.mapper'
 import { BrandUpdateInput } from './dto/brand-update.input'
 import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js'
 import * as FileUpload from 'graphql-upload/Upload.js'
+import { UseGuards } from '@nestjs/common'
+import { AuthGuard } from 'src/utils/jwt-auth.guard'
 
 @Resolver(() => BrandPublic)
 export class BrandResolver {
   constructor(private readonly brandService: BrandService) {}
+
   @Query(() => [BrandPublic], { name: 'getAllBrands' })
   async getAllBrands(): Promise<BrandPublic[]> {
     return await this.brandService.findAll()
@@ -25,14 +28,16 @@ export class BrandResolver {
     return await this.brandService.findBySlug(slug)
   }
 
-  @Mutation(() => BrandPublic, { name: 'createBrand' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => BrandPublic, { name: 'panelCreateBrand' })
   async createBrand(
     @Args('input') input: BrandCreateInput
   ): Promise<BrandPublic> {
     return this.brandService.create(BrandMapper.toEntity(input))
   }
 
-  @Mutation(() => Boolean, { name: 'uploadBrandLogo' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelUploadBrandLogo' })
   async uploadBrandLogo(
     @Args('id') id: string,
     @Args('file', { type: () => GraphQLUpload })
@@ -47,21 +52,24 @@ export class BrandResolver {
     )
   }
 
-  @Mutation(() => Boolean, { name: 'removeBrandLogo' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelRemoveBrandLogo' })
   async removeLogo(@Args('id') id: string): Promise<boolean> {
     return this.brandService.removeBrandLogo(id)
   }
 
-  @Mutation(() => BrandPublic, { name: 'updateBrand' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => BrandPublic, { name: 'panelUpdateBrand' })
   async updateBrand(
     @Args('input') input: BrandUpdateInput
   ): Promise<BrandPublic> {
     return BrandMapper.fromEntityToPublic(
-      await this.brandService.update(BrandMapper.toEntity(input))
+      await this.brandService.update(BrandMapper.fromUpdateToEntity(input))
     )
   }
 
-  @Mutation(() => Boolean, { name: 'deleteBrand' })
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelDeleteBrand' })
   async deleteBrand(@Args('id') input: string): Promise<boolean> {
     return this.brandService.delete(input)
   }

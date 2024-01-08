@@ -10,6 +10,7 @@ import { AuthToken } from './authtoken.entity'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forFeature([User, AuthToken]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

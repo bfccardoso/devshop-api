@@ -45,27 +45,27 @@ type Query {
   getAllBrands: [Brand!]!
   getBrandById(id: String!): Brand!
   getBrandBySlug(slug: String!): Brand!
-  getAllUsers: [User!]!
-  getUserById(id: String!): User!
-  getUserByEmail(email: String!): User!
-  getMe: User!
+  panelGetAllUsers: [User!]!
+  panelGetUserById(id: String!): User!
+  panelGetUserByEmail(email: String!): User!
+  panelGetMe: User!
 }
 
 type Mutation {
-  createCategory(input: CategoryCreateInput!): Category!
-  updateCategory(input: CategoryUpdateInput!): Category!
-  deleteCategory(id: String!): Boolean!
-  createProduct(input: ProductCreateInput!): Product!
-  updateProduct(input: ProductUpdateInput!): Product!
-  deleteProduct(id: String!): Boolean!
-  createBrand(input: BrandCreateInput!): Brand!
-  uploadBrandLogo(id: String!, file: Upload!): Boolean!
-  removeBrandLogo(id: String!): Boolean!
-  updateBrand(input: BrandUpdateInput!): Brand!
-  deleteBrand(id: String!): Boolean!
-  createUser(input: UserCreateInput!): User!
-  updateUser(input: UserUpdateInput!): User!
-  deleteUser(id: String!): Boolean!
+  panelCreateCategory(input: CategoryCreateInput!): Category!
+  panelUpdateCategory(input: CategoryUpdateInput!): Category!
+  panelDeleteCategory(id: String!): Boolean!
+  panelCreateProduct(input: ProductCreateInput!): Product!
+  panelUpdateProduct(input: ProductUpdateInput!): Product!
+  panelDeleteProduct(id: String!): Boolean!
+  panelCreateBrand(input: BrandCreateInput!): Brand!
+  panelUploadBrandLogo(id: String!, file: Upload!): Boolean!
+  panelRemoveBrandLogo(id: String!): Boolean!
+  panelUpdateBrand(input: BrandUpdateInput!): Brand!
+  panelDeleteBrand(id: String!): Boolean!
+  panelCreateUser(input: UserCreateInput!): User!
+  panelUpdateUser(input: UserUpdateInput!): User!
+  panelDeleteUser(id: String!): Boolean!
   auth(input: AuthUserInput!): AuthToken!
   accessToken(refreshToken: String!): String!
 }
