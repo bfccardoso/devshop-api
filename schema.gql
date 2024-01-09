@@ -65,6 +65,7 @@ type Mutation {
   panelDeleteBrand(id: String!): Boolean!
   panelCreateUser(input: UserCreateInput!): User!
   panelUpdateUser(input: UserUpdateInput!): User!
+  panelChangeUserPass(input: UserPassUpdateInput!): Boolean!
   panelDeleteUser(id: String!): Boolean!
   auth(input: AuthUserInput!): AuthToken!
   accessToken(refreshToken: String!): String!
@@ -120,9 +121,13 @@ input UserCreateInput {
 input UserUpdateInput {
   id: String!
   name: String!
-  passwd: String!
   email: String!
   role: String!
+}
+
+input UserPassUpdateInput {
+  id: String!
+  passwd: String!
 }
 
 input AuthUserInput {

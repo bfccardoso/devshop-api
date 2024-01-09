@@ -14,10 +14,6 @@ export class UserUpdateInput {
 
   @Field()
   @Length(3)
-  passwd: string
-
-  @Field()
-  @Length(3)
   @IsEmail()
   @Validate(UserEmailIsUnique)
   email: string

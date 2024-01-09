@@ -10,6 +10,7 @@ import { AuthUserInput } from './dto/auth-user.input'
 import { AuthGuard } from 'src/utils/jwt-auth.guard'
 import { UseGuards } from '@nestjs/common'
 import { AuthUserId } from 'src/utils/jwt-user.decoraton'
+import { UserPassUpdateInput } from './dto/user-pass-update.input'
 
 @Resolver(() => UserPublic)
 export class UserResolver {
@@ -46,6 +47,14 @@ export class UserResolver {
   @Mutation(() => UserPublic, { name: 'panelUpdateUser' })
   async updateUser(@Args('input') input: UserUpdateInput): Promise<UserPublic> {
     return this.userService.update(UserMapper.toUpdateEntity(input))
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelChangeUserPass' })
+  async changeUserPass(
+    @Args('input') input: UserPassUpdateInput
+  ): Promise<boolean> {
+    return this.userService.changePassword(input.id, input.passwd)
   }
 
   @UseGuards(AuthGuard)
