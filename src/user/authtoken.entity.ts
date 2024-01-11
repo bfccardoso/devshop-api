@@ -16,8 +16,19 @@ export class AuthToken {
   @Column({ type: 'timestamp' })
   createdAt: Date
 
+  @Column({ type: 'timestamp' })
+  lastUsedAt: Date
+
+  @Column({ type: 'boolean' })
+  active: boolean
+
+  @Column()
+  userAgent: string
+
   @BeforeInsert()
   setCreatedDate(): void {
     this.createdAt = new Date()
+    this.lastUsedAt = new Date()
+    this.active = true
   }
 }

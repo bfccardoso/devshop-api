@@ -1,4 +1,11 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql'
+import {
+  Resolver,
+  Query,
+  Args,
+  Mutation,
+  Context,
+  GraphQLExecutionContext
+} from '@nestjs/graphql'
 import { UserPublic } from './dto/user'
 import { UserService } from './user.service'
 import { UserCreateInput } from './dto/user-create.input'
@@ -11,6 +18,7 @@ import { AuthGuard } from 'src/utils/jwt-auth.guard'
 import { UseGuards } from '@nestjs/common'
 import { AuthUserId } from 'src/utils/jwt-user.decoraton'
 import { UserPassUpdateInput } from './dto/user-pass-update.input'
+import { AuthSession } from './dto/auth-session'
 
 @Resolver(() => UserPublic)
 export class UserResolver {
@@ -23,6 +31,12 @@ export class UserResolver {
   @Query(() => [UserPublic], { name: 'panelGetAllUsers' })
   async getAllUsers(): Promise<UserPublic[]> {
     return await this.userService.findAll()
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => [AuthSession], { name: 'panelGetAllUsersSessions' })
+  async getAllUsersSessions(@Args('id') id: string): Promise<AuthSession[]> {
+    return await this.userService.findAllUsersSessions(id)
   }
 
   @UseGuards(AuthGuard)
@@ -64,10 +78,14 @@ export class UserResolver {
   }
 
   @Mutation(() => AuthToken, { name: 'auth' })
-  async auth(@Args('input') input: AuthUserInput): Promise<AuthToken> {
+  async auth(
+    @Context() context: GraphQLExecutionContext,
+    @Args('input') input: AuthUserInput
+  ): Promise<AuthToken> {
     const [user, refreshToken] = await this.userService.auth(
       input.email,
-      input.passwd
+      input.passwd,
+      context['req']['headers']['user-agent']
     )
     if (user) {
       const authToken = new AuthToken()
@@ -113,6 +131,12 @@ export class UserResolver {
       return accessToken
     }
     return null
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelInvalidateUserSession' })
+  async invalidateUserSession(@Args('id') input: string): Promise<boolean> {
+    return this.userService.invalidateRefreshToken(input)
   }
 
   @UseGuards(AuthGuard)

@@ -17,6 +17,28 @@ export class UserService {
     return this.userRepository.find()
   }
 
+  async findAllUsersSessions(id: string): Promise<AuthToken[]> {
+    return await this.authTokenRepository.query(
+      'SELECT * FROM "auth_token" WHERE (("userId" = $1))',
+      [id]
+    )
+  }
+
+  // async findAllUsersSessions(id: string): Promise<AuthToken[]> {
+  //   return await this.authTokenRepository
+  //     .createQueryBuilder('authToken')
+  //     .where('"userId" = :id', { id })
+  //     .getMany()
+  // }
+
+  // async findAllUsersSessions(id: string): Promise<AuthToken[]> {
+  //   return await this.authTokenRepository.find({
+  //     where: {
+  //       "user.id": id
+  //     } as any // Utilize 'as any' para contornar o problema de tipo
+  //   })
+  // }
+
   async findById(id: string): Promise<User> {
     return this.userRepository.findOneBy({ id: id })
   }
@@ -29,10 +51,15 @@ export class UserService {
     return this.userRepository.save(input)
   }
 
-  async auth(email: string, passwd: string): Promise<[User, AuthToken]> {
+  async auth(
+    email: string,
+    passwd: string,
+    userAgent: string
+  ): Promise<[User, AuthToken]> {
     const user = await this.userRepository.findOne({ where: [{ email }] })
     if (user && (await user.checkPassword(passwd))) {
       const authToken = new AuthToken()
+      authToken.userAgent = userAgent
       authToken.user = user
       const token = await this.authTokenRepository.save(authToken)
       return [user, token]
@@ -41,10 +68,23 @@ export class UserService {
   }
 
   async getRefreshToken(id: string): Promise<AuthToken> {
-    return await this.authTokenRepository.findOne({
-      where: [{ id }],
+    const refreshToken = await this.authTokenRepository.findOne({
+      where: [{ id, active: true }],
       relations: ['user']
     })
+    console.log('refreshToken:', refreshToken)
+    refreshToken.lastUsedAt = new Date()
+    await this.authTokenRepository.save(refreshToken)
+    return refreshToken
+  }
+
+  async invalidateRefreshToken(id: string): Promise<boolean> {
+    const refreshToken = await this.authTokenRepository.findOne({
+      where: [{ id }]
+    })
+    refreshToken.active = false
+    await this.authTokenRepository.save(refreshToken)
+    return true
   }
 
   async update(input: User): Promise<User> {

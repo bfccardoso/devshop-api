@@ -35,6 +35,18 @@ type AuthToken {
   accessToken: String!
 }
 
+type AuthSession {
+  id: String!
+  userAgent: String
+  lastUsedAt: DateTime
+  active: Boolean
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   getAllCategories: [Category!]!
   getCategoryById(id: String!): Category!
@@ -46,6 +58,7 @@ type Query {
   getBrandById(id: String!): Brand!
   getBrandBySlug(slug: String!): Brand!
   panelGetAllUsers: [User!]!
+  panelGetAllUsersSessions(id: String!): [AuthSession!]!
   panelGetUserById(id: String!): User!
   panelGetUserByEmail(email: String!): User!
   panelGetMe: User!
@@ -69,6 +82,7 @@ type Mutation {
   panelDeleteUser(id: String!): Boolean!
   auth(input: AuthUserInput!): AuthToken!
   accessToken(refreshToken: String!): String!
+  panelInvalidateUserSession(id: String!): Boolean!
 }
 
 input CategoryCreateInput {
