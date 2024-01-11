@@ -28,6 +28,7 @@ type User {
   name: String
   email: String
   role: String
+  picture: String
 }
 
 type AuthToken {
@@ -80,6 +81,8 @@ type Mutation {
   panelUpdateUser(input: UserUpdateInput!): User!
   panelChangeUserPass(input: UserPassUpdateInput!): Boolean!
   panelDeleteUser(id: String!): Boolean!
+  panelUploadUserPicture(id: String!, file: Upload!): Boolean!
+  panelRemoveUserPicture(id: String!): Boolean!
   auth(input: AuthUserInput!): AuthToken!
   accessToken(refreshToken: String!): String!
   panelInvalidateUserSession(id: String!): Boolean!

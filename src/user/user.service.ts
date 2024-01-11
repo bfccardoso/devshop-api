@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './user.entity'
 import { Repository } from 'typeorm'
 import { AuthToken } from './authtoken.entity'
+import { S3 } from 'src/utils/s3'
+import * as sharp from 'sharp'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private s3: S3,
     @InjectRepository(AuthToken)
     private authTokenRepository: Repository<AuthToken>
   ) {}
@@ -111,5 +114,46 @@ export class UserService {
     } catch (err) {
       return false
     }
+  }
+
+  async uploadUserPicture(
+    id: string,
+    createReadStream: () => any,
+    filename: string,
+    mimetype: string
+  ): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ id: id })
+    if (!user) {
+      return false
+    }
+    if (user.picture) {
+      const filename = user.picture.split('.com/')[1].replaceAll('%20', ' ')
+      await this.s3.deleteObject('devshop-bfccardoso', filename)
+    }
+    /*
+      Aqui estamos subindo a imagem redimensionada para 100px, o ideal
+      seria subir duas imagens, a original e a redimensionada.
+    */
+    const stream = createReadStream().pipe(sharp().resize(100))
+    const url = await this.s3.upload(
+      stream,
+      mimetype,
+      'devshop-bfccardoso',
+      id + '-' + filename
+    )
+    await this.userRepository.update(id, {
+      picture: url
+    })
+    return true
+  }
+
+  async removeUserPicture(id: string): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ id: id })
+    const filename = user.picture.split('.com/')[1].replaceAll('%20', ' ')
+    await this.s3.deleteObject('devshop-bfccardoso', filename)
+    await this.userRepository.update(user.id, {
+      picture: null
+    })
+    return true
   }
 }

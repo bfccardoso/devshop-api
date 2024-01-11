@@ -13,4 +13,7 @@ export class UserPublic {
 
   @Field({ nullable: true })
   role: string
+
+  @Field({ nullable: true })
+  picture: string
 }

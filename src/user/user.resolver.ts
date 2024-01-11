@@ -19,6 +19,8 @@ import { UseGuards } from '@nestjs/common'
 import { AuthUserId } from 'src/utils/jwt-user.decoraton'
 import { UserPassUpdateInput } from './dto/user-pass-update.input'
 import { AuthSession } from './dto/auth-session'
+import * as GraphQLUpload from 'graphql-upload/GraphQLUpload.js'
+import * as FileUpload from 'graphql-upload/Upload.js'
 
 @Resolver(() => UserPublic)
 export class UserResolver {
@@ -75,6 +77,28 @@ export class UserResolver {
   @Mutation(() => Boolean, { name: 'panelDeleteUser' })
   async deleteUser(@Args('id') input: string): Promise<boolean> {
     return this.userService.delete(input)
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelUploadUserPicture' })
+  async uploadUserPicture(
+    @Args('id') id: string,
+    @Args('file', { type: () => GraphQLUpload })
+    file: FileUpload
+  ): Promise<boolean> {
+    const { createReadStream, filename, mimetype } = file
+    return this.userService.uploadUserPicture(
+      id,
+      createReadStream,
+      filename,
+      mimetype
+    )
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean, { name: 'panelRemoveUserPicture' })
+  async removeUserPicture(@Args('id') id: string): Promise<boolean> {
+    return this.userService.removeUserPicture(id)
   }
 
   @Mutation(() => AuthToken, { name: 'auth' })

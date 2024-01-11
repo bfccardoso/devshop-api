@@ -7,6 +7,7 @@ import { UserEmailIsUnique } from './validations/userEmailIsUnique'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AuthToken } from './authtoken.entity'
+import { S3 } from 'src/utils/s3'
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { AuthToken } from './authtoken.entity'
       })
     })
   ],
-  providers: [UserService, UserResolver, UserEmailIsUnique]
+  providers: [UserService, UserResolver, UserEmailIsUnique, S3]
 })
 export class UserModule {}

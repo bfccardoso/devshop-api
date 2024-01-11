@@ -26,6 +26,9 @@ export class User {
   @Column({ length: 100, nullable: false })
   role: string // root, user
 
+  @Column({ length: 450, nullable: true })
+  picture: string
+
   @Column({ type: 'timestamp', nullable: true })
   lastLogin: Date
 
