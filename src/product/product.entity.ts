@@ -6,7 +6,8 @@ interface ProductVariation {
   optionName2: string,
   sku: string,
   price: number,
-  weight: number
+  weight: number,
+  stock: number
 }
 
 @Entity()
@@ -22,6 +23,9 @@ export class Product {
 
   @Column({ length: 250, nullable: false })
   slug: string
+
+  @Column({ nullable: true, type: 'integer' })
+  stock: number
 
   //relation / association
   //Product N -> 1 Category

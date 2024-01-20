@@ -1,4 +1,4 @@
-import { Field, InputType, Float } from '@nestjs/graphql'
+import { Field, InputType, Float, Int } from '@nestjs/graphql'
 import { IsUUID, Length, Matches, Validate } from 'class-validator'
 import { ProductSlugIsUnique } from '../validations/productSlugIsUnique'
 import { VariationInput } from './variation.input'
@@ -31,6 +31,9 @@ export class ProductCreateInput {
 
   @Field(() => Float, { nullable: true })
   weight: number
+  
+  @Field(() => Int, { nullable: true })
+  stock: number
 
   @Field(() => [String], {nullable: true})
   optionNames: string[]
