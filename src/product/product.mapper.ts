@@ -15,6 +15,14 @@ export class ProductMapper {
     category.id = input.category
     entity.category = category
 
+    entity.sku = input.sku
+    entity.price = input.price
+    entity.weight = input.weight
+
+    entity.optionNames = input.optionNames
+
+    entity.variations = [input.variations]
+
     return entity
   }
   public static fromUpdateToEntity(input: ProductUpdateInput): Product {
@@ -30,13 +38,18 @@ export class ProductMapper {
 
     return entity
   }
-  public static fromEntityToPublic(entity: Product): ProductPublic{
+  public static fromEntityToPublic(entity: Product): ProductPublic {
     const product = new ProductPublic()
+    console.log('entity: ', entity)
     product.id = entity.id
     product.name = entity.name
     product.slug = entity.slug
+    product.sku = entity.sku
+    product.price = entity.price
+    product.weight = entity.weight
     product.description = entity.description
     product.category = entity.category.id
+    product.images = entity.images
     return product
   }
 }
