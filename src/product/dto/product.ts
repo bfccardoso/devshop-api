@@ -18,6 +18,9 @@ export class ProductPublic {
   category: string
 
   @Field({ nullable: true })
+  brand: string
+
+  @Field({ nullable: true })
   sku: string
 
   @Field({ nullable: true })

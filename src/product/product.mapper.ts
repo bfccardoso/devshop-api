@@ -3,6 +3,7 @@ import { ProductCreateInput } from './dto/product-create.input'
 import { Category } from 'src/category/category.entity'
 import { ProductUpdateInput } from './dto/product-update.input'
 import { ProductPublic } from './dto/product'
+import { Brand } from '../brand/brand.entity'
 
 export class ProductMapper {
   public static toEntity(input: ProductCreateInput): Product {
@@ -14,6 +15,10 @@ export class ProductMapper {
     const category = new Category()
     category.id = input.category
     entity.category = category
+
+    const brand = new Brand()
+    brand.id = input.brand
+    entity.brand = brand
 
     entity.sku = input.sku
     entity.price = input.price
@@ -40,8 +45,7 @@ export class ProductMapper {
     return entity
   }
   public static fromEntityToPublic(entity: Product): ProductPublic {
-    const product = new ProductPublic()
-    console.log('entity: ', entity)
+        const product = new ProductPublic()
     product.id = entity.id
     product.name = entity.name
     product.slug = entity.slug
@@ -50,6 +54,7 @@ export class ProductMapper {
     product.weight = entity.weight
     product.description = entity.description
     product.category = entity.category.id
+    product.brand = entity.brand.id
     product.images = entity.images
     return product
   }

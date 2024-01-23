@@ -4,12 +4,18 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { S3 } from 'src/utils/s3'
 import * as sharp from 'sharp'
+import { Category } from 'src/category/category.entity'
+import { Brand } from 'src/brand/brand.entity'
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
+    @InjectRepository(Brand)
+    private brandRepository: Repository<Brand>,
     private s3: S3
   ) {}
 
@@ -20,10 +26,44 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     return this.productRepository.find({
       relations: {
-        category: true
+        category: true,
+        brand: true
       }
     })
   }
+
+  async findAllByCategory(categorySlug: string): Promise<Product[]> {
+    const category = await this.categoryRepository.findOne({
+      where: { slug: categorySlug }
+    });
+  
+    if (!category) {
+      return [];
+    }
+  
+    return this.productRepository.find({
+      relations: ['category'],
+      where: [{ category: { id: category.id } }]
+    });
+  }
+
+  async findAllByBrand(brandSlug: string): Promise<Product[]> {
+    const brand = await this.brandRepository.findOne({
+      where: { slug: brandSlug }
+    });
+  
+    if (!brand) {
+      return [];
+    }
+  
+    return this.productRepository.find({
+      relations: ['brand'],
+      where: [{ brand: { id: brand.id } }]
+    });
+  }
+  
+  
+  
 
   async findById(id: string): Promise<Product> {
     return await this.productRepository.findOne({
