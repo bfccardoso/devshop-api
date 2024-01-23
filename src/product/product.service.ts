@@ -71,7 +71,8 @@ export class ProductService {
         id: id
       },
       relations: {
-        category: true
+        category: true,
+        brand:true
       }
     })
   }
