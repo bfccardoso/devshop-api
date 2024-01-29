@@ -27,7 +27,7 @@ export class ProductMapper {
 
     entity.optionNames = input.optionNames
 
-    entity.variations = [input.variations]
+    entity.variations = input.variations
 
     return entity
   }
@@ -45,17 +45,19 @@ export class ProductMapper {
     return entity
   }
   public static fromEntityToPublic(entity: Product): ProductPublic {
-        const product = new ProductPublic()
+    const product = new ProductPublic()
     product.id = entity.id
     product.name = entity.name
     product.slug = entity.slug
     product.sku = entity.sku
-    product.price = entity.price
+    product.price = entity.price //Number(entity.price.toString().replace('R$ ', '').replace(',', '.'))
     product.weight = entity.weight
     product.description = entity.description
     product.category = entity.category.id
     product.brand = entity.brand.id
     product.images = entity.images
+    product.variations = entity.variations
+    product.optionNames = entity.optionNames
     return product
   }
 }

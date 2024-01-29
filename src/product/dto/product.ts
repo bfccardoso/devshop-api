@@ -1,4 +1,25 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, ObjectType, Float, Int } from '@nestjs/graphql'
+
+@ObjectType('Variation')
+export class Variation {
+  @Field()
+  optionName1: string
+  
+  @Field()
+  optionName2: string
+  
+  @Field()
+  sku: string
+  
+  @Field(() => Float)
+  price: number
+  
+  @Field(() => Float)
+  weight: number
+  
+  @Field(() => Int)
+  stock: number
+}
 
 @ObjectType('Product')
 export class ProductPublic {
@@ -31,4 +52,10 @@ export class ProductPublic {
 
   @Field(() => [String], { nullable: true })
   images: string[]
+
+  @Field(() => [String], { nullable: true })
+  optionNames: string[]
+
+  @Field(() => [Variation], { nullable: true })
+  variations: Variation[]
 }

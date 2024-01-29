@@ -43,5 +43,5 @@ export class ProductCreateInput {
   optionNames: string[]
 
   @Field(() => [VariationInput], { nullable: true })
-  variations: VariationInput
+  variations: VariationInput[]
 }

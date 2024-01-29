@@ -45,7 +45,7 @@ export class Product {
   @Column({ length: 250, nullable: true })
   sku: string
 
-  @Column({ nullable: true, type: 'money' })
+  @Column({ nullable: true, type: 'decimal' })
   price: number
 
   @Column({ nullable: true, type: 'decimal' })

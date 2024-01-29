@@ -35,35 +35,32 @@ export class ProductService {
   async findAllByCategory(categorySlug: string): Promise<Product[]> {
     const category = await this.categoryRepository.findOne({
       where: { slug: categorySlug }
-    });
-  
+    })
+
     if (!category) {
-      return [];
+      return []
     }
-  
+
     return this.productRepository.find({
-      relations: ['category'],
+      relations: ['category', 'brand'],
       where: [{ category: { id: category.id } }]
-    });
+    })
   }
 
   async findAllByBrand(brandSlug: string): Promise<Product[]> {
     const brand = await this.brandRepository.findOne({
       where: { slug: brandSlug }
-    });
-  
+    })
+
     if (!brand) {
-      return [];
+      return []
     }
-  
+
     return this.productRepository.find({
-      relations: ['brand'],
+      relations: ['brand', 'category'],
       where: [{ brand: { id: brand.id } }]
-    });
+    })
   }
-  
-  
-  
 
   async findById(id: string): Promise<Product> {
     return await this.productRepository.findOne({
@@ -72,13 +69,19 @@ export class ProductService {
       },
       relations: {
         category: true,
-        brand:true
+        brand: true
       }
     })
   }
 
   async findBySlug(slug: string): Promise<Product> {
-    return this.productRepository.findOne({ where: [{ slug }] })
+    return this.productRepository.findOne({
+      where: { slug },
+      relations: {
+        category: true,
+        brand: true
+      }
+    })
   }
 
   async update(input: Product): Promise<Product> {
