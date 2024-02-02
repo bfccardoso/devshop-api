@@ -10,6 +10,7 @@ import { ProductModule } from './product/product.module'
 import { BrandModule } from './brand/brand.module'
 import { UserModule } from './user/user.module'
 import { CoreModule } from './core/core.module'
+import { CorreiosModule } from './correios/correios.module'
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { CoreModule } from './core/core.module'
     CategoryModule,
     ProductModule,
     BrandModule,
-    UserModule
+    UserModule,
+    CorreiosModule
   ],
   controllers: [AppController],
   providers: [AppService]

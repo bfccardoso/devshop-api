@@ -64,6 +64,46 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Address {
+  cep: String
+  uf: String
+  numeroLocalidade: Float
+  localidade: String
+  logradouro: String
+  tipoLogradouro: String
+  nomeLogradouro: String
+  abreviatura: String
+  bairro: String
+  tipoCEP: Float
+}
+
+type DeliveryTime {
+  coProduto: String
+  prazoEntrega: Float
+  dataMaxima: String
+  entregaDomiciliar: String
+  entregaSabado: String
+  msgPrazo: String
+}
+
+type ShippingPrice {
+  coProduto: String
+  pcBase: String
+  pcBaseGeral: String
+  peVariacao: String
+  pcReferencia: String
+  vlBaseCalculoImposto: String
+  inPesoCubico: String
+  psCobrado: String
+  peAdValorem: String
+  vlSeguroAutomatico: String
+  qtAdicional: String
+  pcFaixa: String
+  pcFaixaVariacao: String
+  pcProduto: String
+  pcFinal: String
+}
+
 type Query {
   getAllCategories: [Category!]!
   getCategoryById(id: String!): Category!
@@ -81,6 +121,9 @@ type Query {
   panelGetUserById(id: String!): User!
   panelGetUserByEmail(email: String!): User!
   panelGetMe: User!
+  getAddressByZipCode(zipCode: String!): Address!
+  getDeliveryTime(codProduct: String!, cepDestino: String!, date: String!): DeliveryTime!
+  getShippingPrice(codProduct: String!, cepDestino: String!, date: String!, weight: Float!, objectType: Float!, length: Float!, width: Float!, height: Float!): ShippingPrice!
 }
 
 type Mutation {
