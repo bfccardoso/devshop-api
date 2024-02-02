@@ -21,12 +21,11 @@ export class CorreiosResolver {
     @Args('cepDestino') destinationZipCode: string,
     @Args('date') date: string
   ): Promise<DELIVERY_TIME> {
-    const resp = await this.correiosService.getDeliveryTime(
+    return await this.correiosService.getDeliveryTime(
       productCode,
       destinationZipCode,
       date
     )
-    return resp
   }
 
   @Query(() => SHIPPING_PRICE, { name: 'getShippingPrice' })
@@ -40,7 +39,7 @@ export class CorreiosResolver {
     @Args('width') width: number,
     @Args('height') height: number
   ): Promise<SHIPPING_PRICE> {
-    const resp = await this.correiosService.getShippingPrice(
+    return await this.correiosService.getShippingPrice(
       productCode,
       destinationZipCode,
       date,
@@ -50,6 +49,5 @@ export class CorreiosResolver {
       width,
       height
     )
-    return resp
   }
 }
